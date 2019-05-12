@@ -1,0 +1,7 @@
+@import '../variables';
+
+.toggler {
+  height: $toggler-height;
+  max-height: $toggler-height;
+  min-height: $toggler-height;
+}

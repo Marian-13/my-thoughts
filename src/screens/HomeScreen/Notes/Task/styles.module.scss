@@ -1,0 +1,10 @@
+@import '~global/colors.scss';
+@import '../../mixins.scss';
+
+.urgentTask {
+  background-color: $grey-lighten-5;
+}
+
+.title {
+  color: $urgent-task-color;
+}

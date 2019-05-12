@@ -1,0 +1,21 @@
+@import '~global/colors.scss';
+@import '../../mixins.scss';
+
+.note {
+  background-color: $white;
+  color: $black;
+  font-size: 16px;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  min-height: 50px;
+  padding: 5px 10px;
+  width: 90%;
+
+  @include bottom-line($grey);
+}
+
+.title {
+  font-size: 13px;
+}

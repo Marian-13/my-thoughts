@@ -1,0 +1,32 @@
+@import '~global/colors.scss';
+@import '../mixins.scss';
+
+.textareaContainer {
+  background-color: white;
+  border-top: 1px solid $grey;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 100%;
+
+  @include bottom-line($outer-color: $grey, $inner-color: $white);
+
+  &:focus-within {
+    @include bottom-line($teal-lighten-1);
+  }
+}
+
+.textarea {
+  margin-bottom: 0 !important;
+  max-height: 76px;
+  overflow-y: auto !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.textarea:focus {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}

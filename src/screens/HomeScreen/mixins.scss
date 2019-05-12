@@ -1,0 +1,4 @@
+@mixin bottom-line($outer-color, $inner-color: $outer-color) {
+  border-bottom: 1px solid $outer-color;
+  box-shadow: 0 -1px $inner-color inset;
+}

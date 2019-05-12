@@ -1,0 +1,14 @@
+@import '~global/colors.scss';
+
+.buttons {
+  margin: 0;
+}
+
+.buttonContainer {
+  padding: 0 !important;
+}
+
+.middleButton {
+  border-left: 1px solid $grey;
+  border-right: 1px solid $grey;
+}

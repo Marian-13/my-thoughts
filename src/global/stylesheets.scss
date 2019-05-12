@@ -1,0 +1,11 @@
+@import '~materialize-css/dist/css/materialize.css';
+@import '~animate.css/animate.css';
+
+html, body, #root {
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}

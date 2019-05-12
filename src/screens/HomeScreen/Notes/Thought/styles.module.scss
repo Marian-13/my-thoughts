@@ -1,0 +1,10 @@
+@import '~global/colors.scss';
+@import '../../mixins.scss';
+
+.thought {
+  background-color: $white;
+}
+
+.title {
+  color: $thought-color;
+}

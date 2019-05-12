@@ -1,0 +1,8 @@
+@import './variables.scss';
+
+.screenContent {
+  height: calc(100% - #{$navbar-height});
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
