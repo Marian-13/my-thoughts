@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import { Button, Icon } from 'react-materialize'
-import { getAudioFile } from 'lib/audio'
+import { startPlayingAudioFile, pausePlayingAudioFile } from 'lib/audio'
 
 import styles from './styles.module.scss'
 
@@ -12,39 +12,25 @@ class AudioNote extends Component {
     className: PropTypes.string,
     titleClassName: PropTypes.string,
     titleText: PropTypes.string,
-    fileName: PropTypes.string
+    fileName: PropTypes.string,
+    audioFile: PropTypes.object
   }
 
   state = { isPlaying: false }
 
-  async componentDidMount() {
-    this.audio = getAudioFile(this.props.fileName)
-  }
+  // audioFile = new window.Media(
+  //   this.props.fileName,
+  //   () => console.log('Success'),
+  //   error => { console.log('Error'); console.log(error) },
+  //   status => { console.log('Status'); console.log(status) }
+  // )
 
   handlePlayButtonClick = async () => {
-    this.setState({ isPlaying: true }, () => this.audio.play())
-
-    // this.audio = await getAudioFile(this.props.fileName)
-    //
-    // this.setState({ isPlaying: true }, () => this.audio.play())
-
-    // console.log('Promise');
-    // console.log(getAudioFile(this.props.fileName))
-    //
-    // getAudioFile(this.props.fileName).then(audio => {
-    //   console.log('Then');
-    //   this.audio = audio
-    //
-    //   this.setState({ isPlaying: true }, () => this.audio.play())
-    // }).catch(error => {
-    //   console.log('Catch Error');
-    //   console.log(error)
-    //   console.log(error.code)
-    // })
+    this.setState({ isPlaying: true }, () => startPlayingAudioFile(this.props.audioFile))
   }
 
   handlePauseButtonClick = async () => {
-    this.setState({ isPlaying: false }, () => this.audio.pause())
+    this.setState({ isPlaying: false }, () => pausePlayingAudioFile(this.props.audioFile))
   }
 
   renderPlayButton() {

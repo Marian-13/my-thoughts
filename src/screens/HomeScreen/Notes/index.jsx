@@ -26,7 +26,6 @@ class Notes extends Component {
 
     return (
       <div className={styles.notes}>
-        {<AudioNote key="2412234asfas" uid="2412234asfas" fileName="halo_on_fire" />}
         {notes.map(note => this.renderNote(note))}
       </div>
     )
