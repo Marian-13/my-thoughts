@@ -9,7 +9,7 @@ export const audio = (state = initialState, action) => {
     case types.STOP_AUDIO_RECORDING:
       return { ...state, isRecording: false }
     case types.SAVE_AUDIO:
-      return { ...state, audio: action.audio }
+      return { ...state, audio: action.audio }    
     default:
       return state
   }

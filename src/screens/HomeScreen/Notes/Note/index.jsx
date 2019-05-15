@@ -8,23 +8,21 @@ import styles from './styles.module.scss'
 class Note extends Component {
   static propTypes = {
     className: PropTypes.string,
-    titleClassName: PropTypes.string,
-    titleText: PropTypes.string,
-    text: PropTypes.string
+    renderHeader: PropTypes.func,
+    renderBody: PropTypes.func
   }
 
   render() {
-    const { className, titleClassName, titleText, text } = this.props
+    const { className, renderHeader, renderBody } = this.props
 
     return (
       <div className={classnames(styles.note, className)}>
-        <div className={classnames(styles.title, titleClassName)}>
-          {titleText}
-        </div>
-        {text}
+        {renderHeader()}
+        {renderBody()}
       </div>
     )
   }
 }
 
-export default withOneTimeInOutAnimation(Note)
+// export default withOneTimeInOutAnimation(Note)
+export default Note

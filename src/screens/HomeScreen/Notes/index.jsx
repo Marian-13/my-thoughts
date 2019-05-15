@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { NOTE_TYPES } from 'domain/note'
 import Thought from './Thought'
 import Task from './Task'
-import AudioNote from './AudioNote'
+import AudioThought from './AudioThought'
 import styles from './styles.module.scss'
 
 const mapStateToProps = state => ({ notes: state.homeScreen.notes })
@@ -26,6 +26,8 @@ class Notes extends Component {
 
     return (
       <div className={styles.notes}>
+        <AudioThought isDownloaded={false} />
+
         {notes.map(note => this.renderNote(note))}
       </div>
     )

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Note from '../Note'
 import styles from './styles.module.scss'
 
-export default class Thought extends Component {
+class Thought extends Component {
   static propTypes = {
     uid: PropTypes.string,
     text: PropTypes.string
@@ -16,10 +16,11 @@ export default class Thought extends Component {
     return (
       <Note
         className={styles.thought}
-        titleClassName={styles.title}
-        titleText="Thought"
-        text={text}
+        renderHeader={() => <div className={styles.title}>{"Thought"}</div>}
+        renderBody={() => text}
       />
     )
   }
 }
+
+export default Thought

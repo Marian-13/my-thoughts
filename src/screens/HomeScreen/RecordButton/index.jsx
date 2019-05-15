@@ -8,6 +8,7 @@ import AudioNote from '../Notes/AudioNote'
 
 import Button from './Button'
 import { startAudioRecording, stopAudioRecording, saveAudio } from 'lib/audio/actionCreators'
+import { createAudioNote } from '../actionCreators'
 
 import {
   createAudioFile,
@@ -19,7 +20,8 @@ import {
 import styles from './styles.module.scss'
 
 // const mapStateToProps = state => ({ isRecording: state.audio.isRecording })
-// const mapDispatchToProps = { startAudioRecording, stopAudioRecording }
+const mapStateToProps = state => ({ noteType: state.homeScreen.noteType })
+const mapDispatchToProps = { createAudioNote }
 
 class RecordButton extends Component {
   state = { hasRecordings: false, isRecording: false }
@@ -59,6 +61,9 @@ class RecordButton extends Component {
 
   handleSaveButtonClick = () => {
     this.audioFiles.forEach(releaseAudioFile)
+
+    this.props.createAudioNote(this.props.noteType, this.audioFiles.map(audioFile => audioFile.src))
+
     this.audioFiles = []
 
     this.setState({ hasRecordings: false })
@@ -144,5 +149,5 @@ class RecordButton extends Component {
   }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(RecordButton)
-export default RecordButton
+export default connect(mapStateToProps, mapDispatchToProps)(RecordButton)
+// export default RecordButton

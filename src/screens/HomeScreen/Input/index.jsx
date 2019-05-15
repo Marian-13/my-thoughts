@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 
 import Textarea from 'components/Textarea'
 import { isEnter } from 'lib/event'
-import { createNote } from 'domain/note'
-import { addNote } from '../actionCreators'
+import { createTextNote } from '../actionCreators'
 import styles from './styles.module.scss'
 
 const mapStateToProps = state => ({ noteType: state.homeScreen.noteType })
-const mapDispatchToProps = { addNote }
+const mapDispatchToProps = { createTextNote }
 
 class Input extends Component {
   state = { text: '' }
@@ -24,9 +23,9 @@ class Input extends Component {
 
     if (!this.state.text) return
 
-    const note = createNote(this.props.noteType, { text: this.state.text })
+    this.props.createTextNote(this.props.noteType, { text: this.state.text })
 
-    this.setState({ text: '' }, () => this.props.addNote(note))
+    this.setState({ text: '' })
   }
 
   render() {

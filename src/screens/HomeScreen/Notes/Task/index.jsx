@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Note from '../Note'
 import styles from './styles.module.scss'
 
-export default class Task extends Component {
+class Task extends Component {
   static propTypes = {
     uid: PropTypes.string,
     text: PropTypes.string
@@ -16,10 +16,11 @@ export default class Task extends Component {
     return (
       <Note
         className={styles.urgentTask}
-        titleClassName={styles.title}
-        titleText="Ungent Task"
-        text={text}
+        renderHeader={() => <div className={styles.title}>{"Urgent Task"}</div>}
+        renderBody={() => text}
       />
     )
   }
 }
+
+export default Task

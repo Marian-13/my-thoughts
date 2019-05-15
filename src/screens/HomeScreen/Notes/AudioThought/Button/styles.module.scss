@@ -1,0 +1,16 @@
+@import '~global/colors.scss';
+
+.button {
+  background-color: $grey-lighten-2;
+  border-radius: 0;
+  height: 35px;
+  width: 60px;
+
+  &:hover {
+    background-color: $grey-lighten-2;
+  }
+
+  &:focus {
+    background-color: $grey-lighten-2;
+  }
+}
