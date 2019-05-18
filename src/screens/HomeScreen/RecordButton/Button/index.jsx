@@ -18,7 +18,7 @@ export default class Button extends Component {
   }
 
   render() {
-    const { isRecording, className, iconClassName, iconType } = this.props
+    const { className, iconClassName, iconType } = this.props
 
     return (
       <MButton

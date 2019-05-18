@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+}
+
+.position {
+  font-size: 13px;
+  padding-right: 10px;
+}
+
+.duration {
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+.progress {
+  margin-bottom: 0;
+}
+
+.stopButton {
+  margin-left: 5px;
+}

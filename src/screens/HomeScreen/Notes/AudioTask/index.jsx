@@ -3,21 +3,22 @@ import PropTypes from 'prop-types'
 
 import Note from '../Note'
 import Title from '../Title'
+import Player from '../Player'
 
 import commonStyles from '../commonStyles.module.scss'
 
-class Thought extends Component {
+class AudioTask extends Component {
   static propTypes = {
     uid: PropTypes.string,
-    text: PropTypes.string
+    sources: PropTypes.array
   }
 
   renderNoteHeader = () => {
-    return <Title className={commonStyles.thoughtTitle} text="Thought" />
+    return <Title className={commonStyles.thoughtTitle} text="Urgent Audio Task" />
   }
 
   renderNoteBody = () => {
-    return this.props.text
+    return <Player audioSources={this.props.sources} />
   }
 
   render() {
@@ -31,4 +32,4 @@ class Thought extends Component {
   }
 }
 
-export default Thought
+export default AudioTask

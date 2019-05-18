@@ -1,11 +1,19 @@
 @import '~global/colors.scss';
-@import '../../mixins.scss';
+
+.thought {
+  background-color: $white;
+}
+
+.thoughtTitle {
+  color: $thought-color;
+  font-size: 13px;
+}
 
 .urgentTask {
   background-color: $grey-lighten-5;
 }
 
-.title {
+.taskTitle {
   color: $urgent-task-color;
   font-size: 13px;
 }

@@ -21,5 +21,5 @@ export const createTextNote = (type, data) => {
 export const createAudioNote = (type, data) => {
   const { sources } = data
 
-  return { uid: generateUniqueId(), type, subtype: NOTE_SUBTYPES.TEXT, sources }
+  return { uid: generateUniqueId(), type, subtype: NOTE_SUBTYPES.AUDIO, sources }
 }

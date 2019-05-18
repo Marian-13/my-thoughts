@@ -6,7 +6,6 @@ import { isEnter } from 'lib/event'
 import { createTextNote } from '../actionCreators'
 import styles from './styles.module.scss'
 
-const mapStateToProps = state => ({ noteType: state.homeScreen.noteType })
 const mapDispatchToProps = { createTextNote }
 
 class Input extends Component {
@@ -23,7 +22,7 @@ class Input extends Component {
 
     if (!this.state.text) return
 
-    this.props.createTextNote(this.props.noteType, { text: this.state.text })
+    this.props.createTextNote({ text: this.state.text })
 
     this.setState({ text: '' })
   }
@@ -45,4 +44,4 @@ class Input extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Input)
+export default connect(null, mapDispatchToProps)(Input)

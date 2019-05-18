@@ -12,7 +12,8 @@ module.exports = {
       'hocs': path.resolve(__dirname, 'src/common/hocs'),
       'lib': path.resolve(__dirname, 'src/lib'),
       'images': path.resolve(__dirname, 'src/images')
-    }
+    },
+    configure: { devtool: 'inline-source-map' }
   },
   eslint: {
     mode: ESLINT_MODES.file

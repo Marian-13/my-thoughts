@@ -1,109 +1,67 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-materialize'
-import classnames from 'classnames'
-import last from 'lodash/last'
-
-import AudioNote from '../Notes/AudioNote'
 
 import Button from './Button'
-import { startAudioRecording, stopAudioRecording, saveAudio } from 'lib/audio/actionCreators'
-import { createAudioNote } from '../actionCreators'
-
 import {
-  createAudioFile,
-  startRecordingToAudioFile,
-  stopRecordingToAudioFile,
-  releaseAudioFile
-} from 'lib/audio'
+  startRecordingAudio,
+  stopRecordingAudio,
+  releaseRecordedAudio
+} from 'lib/audio/actionCreators'
+import { createAudioNote } from '../actionCreators'
 
 import styles from './styles.module.scss'
 
-// const mapStateToProps = state => ({ isRecording: state.audio.isRecording })
-const mapStateToProps = state => ({ noteType: state.homeScreen.noteType })
-const mapDispatchToProps = { createAudioNote }
+const mapStateToProps = state => ({
+  isAudioRecording: state.audio.isRecording,
+  hasAudioRecord: !!state.audio.filesForRecording.length,
+  audioRecordSources: state.audio.filesForRecording.map(audioFile => audioFile.src)
+})
+
+const mapDispatchToProps = {
+  startRecordingAudio,
+  stopRecordingAudio,
+  releaseRecordedAudio,
+  createAudioNote
+}
 
 class RecordButton extends Component {
-  state = { hasRecordings: false, isRecording: false }
-
-  audioFiles = []
-
-  componentWillUnmount() {
-    this.audioFiles.forEach(releaseAudioFile)
+  componentDidMount() {
+    this.props.releaseRecordedAudio()
   }
 
-  handleStartButtonClick = async () => {
-    const audioFile = createAudioFile()
-
-    this.audioFiles.push(audioFile)
-
-    this.setState({ hasRecordings: true, isRecording: true }, () => startRecordingToAudioFile(audioFile))
+  handleStartButtonClick = () => {
+    this.props.startRecordingAudio()
   }
 
   handleStopButtonClick = () => {
-    this.setState({ isRecording: false }, () => stopRecordingToAudioFile(last(this.audioFiles)))
+    this.props.stopRecordingAudio()
   }
 
   handleContinueButtonClick = () => {
-    const audioFile = createAudioFile()
-
-    this.audioFiles.push(audioFile)
-
-    this.setState({ isRecording: true }, () => startRecordingToAudioFile(audioFile))
+    this.props.startRecordingAudio()
   }
 
   handleRemoveButtonClick = () => {
-    this.audioFiles.forEach(releaseAudioFile)
-    this.audioFiles = []
-
-    this.setState({ hasRecordings: false })
+    this.props.releaseRecordedAudio()
   }
 
   handleSaveButtonClick = () => {
-    this.audioFiles.forEach(releaseAudioFile)
-
-    this.props.createAudioNote(this.props.noteType, this.audioFiles.map(audioFile => audioFile.src))
-
-    this.audioFiles = []
-
-    this.setState({ hasRecordings: false })
+    this.props.releaseRecordedAudio()
+    this.props.createAudioNote({ sources: this.props.audioRecordSources })
   }
 
   renderStartButton() {
-    // return <Button iconType="mic" onClick={this.handleStartButtonClick} />
-
-    return (
-      <React.Fragment>
-        <Button iconType="mic" onClick={this.handleStartButtonClick} />
-
-        {this.audioFiles.map(audioFile => (
-          <AudioNote key={audioFile.src} uid={audioFile.src} audioFile={audioFile} />
-        ))}
-      </React.Fragment>
-    )
+    return <Button iconType="mic" onClick={this.handleStartButtonClick} />
   }
 
   renderStopButton() {
-    // return (
-    //   <Button
-    //     iconClassName="animated flash slower infinite"
-    //     iconType="fiber_manual_record"
-    //     onClick={this.handleStopButtonClick}
-    //   />
-    // )
-
     return (
-      <React.Fragment>
-        <Button
-          iconClassName="animated flash slower infinite"
-          iconType="fiber_manual_record"
-          onClick={this.handleStopButtonClick}
-        />
-
-        {this.audioFiles.map(audioFile => (
-          <AudioNote key={audioFile.src} uid={audioFile.src} audioFile={audioFile} />
-        ))}
-      </React.Fragment>
+      <Button
+        iconClassName="animated flash slower infinite"
+        iconType="fiber_manual_record"
+        onClick={this.handleStopButtonClick}
+      />
     )
   }
 
@@ -120,13 +78,12 @@ class RecordButton extends Component {
   }
 
   render() {
-    const { isRecording, hasRecordings } = this.state
+    const { isAudioRecording, hasAudioRecord } = this.props
 
-    if (isRecording) return this.renderStopButton()
-    if (!hasRecordings) return this.renderStartButton()
+    if (isAudioRecording) return this.renderStopButton()
+    if (!hasAudioRecord) return this.renderStartButton()
 
     return (
-      <React.Fragment >
       <Row className={styles.buttons}>
         <Col s={4} className={styles.buttonContainer}>
           {this.renderContinueButton()}
@@ -140,14 +97,8 @@ class RecordButton extends Component {
           {this.renderSaveButton()}
         </Col>
       </Row>
-
-        {this.audioFiles.map(audioFile => (
-          <AudioNote key={audioFile.src} uid={audioFile.src} audioFile={audioFile} />
-        ))}
-      </React.Fragment>
     )
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecordButton)
-// export default RecordButton

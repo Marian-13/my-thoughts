@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import Note from '../Note'
-import styles from './styles.module.scss'
+import Title from '../Title'
+
+import commonStyles from '../commonStyles.module.scss'
 
 class Task extends Component {
   static propTypes = {
@@ -10,14 +12,20 @@ class Task extends Component {
     text: PropTypes.string
   }
 
-  render() {
-    const { text } = this.props
+  renderNoteHeader = () => {
+    return <Title className={commonStyles.taskTitle} text="Urgent Task" />
+  }
 
+  renderNoteBody = () => {
+    return this.props.text
+  }
+
+  render() {
     return (
       <Note
-        className={styles.urgentTask}
-        renderHeader={() => <div className={styles.title}>{"Urgent Task"}</div>}
-        renderBody={() => text}
+        className={commonStyles.thought}
+        renderHeader={this.renderNoteHeader}
+        renderBody={this.renderNoteBody}
       />
     )
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button as MButton, Icon } from 'react-materialize'
+import { Button as MButton } from 'react-materialize'
 import classnames from 'classnames'
 
 import styles from './styles.module.scss'
