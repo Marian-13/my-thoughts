@@ -1,0 +1,7 @@
+export const START_PLAYING_AUDIO_RECORD = 'start_playing_audio_record'
+export const START_PLAYING_NEXT_AUDIO_RECORD_FRAGMENT = 'start_playing_next_audio_record_fragment'
+export const PAUSE_PLAYING_AUDIO_RECORD = 'pause_playing_audio_record'
+export const RESUME_PLAYING_AUDIO_RECORD = 'resume_playing_audio_record'
+export const STOP_PLAYING_AUDIO_RECORD = 'stop_playing_audio_record'
+export const FINISH_PLAYING_AUDIO_RECORD = 'finish_playing_audio_record'
+export const RELEASE_PLAYED_AUDIO_RECORD = 'release_played_audio_record'

@@ -7,15 +7,15 @@ import {
   startRecordingAudio,
   stopRecordingAudio,
   releaseRecordedAudio
-} from 'lib/audio/actionCreators'
+} from 'lib/audio/recording/actionCreators'
 import { createAudioNote } from '../actionCreators'
 
 import styles from './styles.module.scss'
 
 const mapStateToProps = state => ({
-  isAudioRecording: state.audio.isRecording,
-  hasAudioRecord: !!state.audio.filesForRecording.length,
-  audioRecordSources: state.audio.filesForRecording.map(audioFile => audioFile.src)
+  isAudioRecording: state.audioRecording.isRecording,
+  hasAudioRecord: !!state.audioRecording.fragments.length,
+  audioRecordSources: state.audioRecording.fragments.map(audioFile => audioFile.src)
 })
 
 const mapDispatchToProps = {

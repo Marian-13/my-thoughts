@@ -5,24 +5,30 @@ import { Icon, ProgressBar } from 'react-materialize'
 
 import Button from './Button'
 import {
-  startPlayingAudio,
-  pausePlayingAudio,
-  stopPlayingAudio,
-  releasePlayedAudio
-} from 'lib/audio/actionCreators'
+  startPlayingAudioRecord,
+  pausePlayingAudioRecord,
+  resumePlayingAudioRecord,
+  stopPlayingAudioRecord,
+  releasePlayedAudioRecord
+} from 'lib/audio/playing/actionCreators'
 
 import styles from './styles.module.scss'
 
 const mapStateToProps = state => ({
-  isAudioPlaying: state.audio.isPlaying,
-  isAudioPaused: state.audio.isPlaying
+  isAudioRecordPlaying: state.audioPlaying.isPlaying,
+  isAudioRecordPaused: state.audioPlaying.isPaused,
+  isAudioRecordStopped: state.audioPlaying.isStopped,
+  isAudioRecordFinished: state.audioPlaying.isFinished,
+  audioRecordPosition: state.audioPlaying.position,
+  audioRecordDuration: state.audioPlaying.duration
 })
 
 const mapDispatchToProps = {
-  startPlayingAudio,
-  pausePlayingAudio,
-  stopPlayingAudio,
-  releasePlayedAudio
+  startPlayingAudioRecord,
+  pausePlayingAudioRecord,
+  resumePlayingAudioRecord,
+  stopPlayingAudioRecord,
+  releasePlayedAudioRecord
 }
 
 class Player extends Component {
@@ -31,20 +37,19 @@ class Player extends Component {
   }
 
   handleStartButtonClick = () => {
-    this.props.releasePlayedAudio()
-    this.props.startPlayingAudio(this.props.audioSources)
+    this.props.startPlayingAudioRecord(this.props.audioSources)
   }
 
   handlePauseButtonClick = () => {
-    this.props.pausePlayingAudio()
+    this.props.pausePlayingAudioRecord()
   }
 
   handleResumeButtonClick = () => {
-    this.props.resumePlayingAudio()
+    this.props.resumePlayingAudioRecord()
   }
 
   handleStopButtonClick = () => {
-    this.props.stopPlayingAudio()
+    this.props.stopPlayingAudioRecord()
   }
 
   renderStartButton() {
@@ -72,10 +77,10 @@ class Player extends Component {
   }
 
   renderChangeButton = () => {
-    const { isAudioPlaying, isAudioPaused } = this.props
+    const { isAudioRecordPlaying, isAudioRecordPaused } = this.props
 
-    if (isAudioPlaying) return this.renderPauseButton()
-    if (isAudioPaused) return this.renderResumeButton()
+    if (isAudioRecordPlaying) return this.renderPauseButton()
+    if (isAudioRecordPaused) return this.renderResumeButton()
 
     return this.renderStartButton()
   }
@@ -88,15 +93,22 @@ class Player extends Component {
     )
   }
 
+  formatTime(seconds) {
+    // TODO Convert to time
+    return seconds.toString().replace('.', ':').slice(0, 4)
+  }
+
   render() {
+    const { audioRecordPosition, audioRecordDuration } = this.props
+
     return (
       <div className={styles.container}>
         <div className={styles.info}>
-          <div className={styles.position}>0:00</div>
+          <div className={styles.position}>{this.formatTime(audioRecordPosition)}</div>
 
           <ProgressBar className={styles.progress} progress={25} />
 
-          <div className={styles.duration}>0:50</div>
+          <div className={styles.duration}>{this.formatTime(audioRecordDuration)}</div>
         </div>
 
         <div className={styles.actions}>
