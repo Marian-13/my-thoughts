@@ -3,11 +3,18 @@ import { connect } from 'react-redux'
 import { Row, Col } from 'react-materialize'
 
 import Button from './Button'
+
 import {
   startRecordingAudio,
   stopRecordingAudio,
   releaseRecordedAudio
 } from 'lib/audio/recording/actionCreators'
+
+import {
+  getSourceOfMedia,
+  getDurationOfMedia
+} from 'lib/audio'
+
 import { createAudioNote } from '../actionCreators'
 
 import styles from './styles.module.scss'
@@ -15,7 +22,7 @@ import styles from './styles.module.scss'
 const mapStateToProps = state => ({
   isAudioRecording: state.audioRecording.isRecording,
   hasAudioRecord: !!state.audioRecording.fragments.length,
-  audioRecordSources: state.audioRecording.fragments.map(audioFile => audioFile.src)
+  audioRecordFragments: state.audioRecording.fragments
 })
 
 const mapDispatchToProps = {
@@ -47,8 +54,17 @@ class RecordButton extends Component {
   }
 
   handleSaveButtonClick = () => {
-    this.props.releaseRecordedAudio()
-    this.props.createAudioNote({ sources: this.props.audioRecordSources })
+    const { releaseRecordedAudio, audioRecordFragments, createAudioNote } = this.props
+
+    const audioRecordSources = audioRecordFragments.map(getSourceOfMedia)
+
+    Promise.all(audioRecordFragments.map(fragment => getDurationOfMedia(fragment)))
+      .then(durations => durations.reduce((sum, duration) => (sum += duration), 0))
+      .then(audioRecordDuration => {
+        releaseRecordedAudio()
+
+        createAudioNote({ sources: audioRecordSources, duration: audioRecordDuration })
+      })
   }
 
   renderStartButton() {

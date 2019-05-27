@@ -49,7 +49,7 @@ class Notes extends Component {
   }
 
   renderAudioThought(note) {
-    return <AudioThought key={note.uid} uid={note.uid} sources={note.sources} />
+    return <AudioThought key={note.uid} uid={note.uid} sources={note.sources} duration={note.duration} />
   }
 
   renderTextTask(note) {
@@ -57,7 +57,7 @@ class Notes extends Component {
   }
 
   renderAudioTask(note) {
-    return <AudioTask key={note.uid} uid={note.uid} sources={note.sources} />
+    return <AudioTask key={note.uid} uid={note.uid} sources={note.sources} duration={note.duration} />
   }
 
   render() {

@@ -2,16 +2,16 @@ import last from 'lodash/last'
 
 import * as types from './actionTypes'
 import {
-  createAudioFile,
-  startRecordingToAudioFile,
-  stopRecordingToAudioFile,
-  releaseAudioFile
+  createMedia,
+  startRecordingMedia,
+  stopRecordingMedia,
+  releaseMedia
 } from 'lib/audio'
 
 export const startRecordingAudio = () => {
-  const audioFile = createAudioFile()
+  const audioFile = createMedia()
 
-  startRecordingToAudioFile(audioFile)
+  startRecordingMedia(audioFile)
 
   return { type: types.START_RECORDING_AUDIO, fragment: audioFile }
 }
@@ -19,7 +19,7 @@ export const startRecordingAudio = () => {
 export const stopRecordingAudio = () => {
   const audioFile = last(window.store.getState().audioRecording.fragments)
 
-  stopRecordingToAudioFile(audioFile)
+  stopRecordingMedia(audioFile)
 
   return { type: types.STOP_RECORDING_AUDIO }
 }
@@ -27,7 +27,7 @@ export const stopRecordingAudio = () => {
 export const releaseRecordedAudio = () => {
   const audioFiles = window.store.getState().audioRecording.fragments
 
-  audioFiles.forEach(releaseAudioFile)
+  audioFiles.forEach(releaseMedia)
 
   return { type: types.RELEASE_RECORDED_AUDIO }
 }

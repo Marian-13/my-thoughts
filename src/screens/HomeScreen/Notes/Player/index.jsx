@@ -5,51 +5,62 @@ import { Icon, ProgressBar } from 'react-materialize'
 
 import Button from './Button'
 import {
-  startPlayingAudioRecord,
-  pausePlayingAudioRecord,
-  resumePlayingAudioRecord,
-  stopPlayingAudioRecord,
-  releasePlayedAudioRecord
+  startPlayingAudioTrack,
+  pausePlayingAudioTrack,
+  resumePlayingAudioTrack,
+  stopPlayingAudioTrack,
+  releasePlayedAudioTrack
 } from 'lib/audio/playing/actionCreators'
+import { secondsToPlayerFormat } from 'lib/formatters'
 
 import styles from './styles.module.scss'
 
-const mapStateToProps = state => ({
-  isAudioRecordPlaying: state.audioPlaying.isPlaying,
-  isAudioRecordPaused: state.audioPlaying.isPaused,
-  isAudioRecordStopped: state.audioPlaying.isStopped,
-  isAudioRecordFinished: state.audioPlaying.isFinished,
-  audioRecordPosition: state.audioPlaying.position,
-  audioRecordDuration: state.audioPlaying.duration
-})
+const mapStateToProps = (state, ownProps) => {
+  const { uid } = ownProps
+  const entry = state.audioPlaying.entries[uid]
+
+  if (!entry) return {}
+
+  return {
+    isPlaying: entry.isPlaying,
+    isPaused: entry.isPaused,
+    isStopped: entry.isStopped,
+    isFinished: entry.isFinished,
+    position: entry.position
+  }
+}
 
 const mapDispatchToProps = {
-  startPlayingAudioRecord,
-  pausePlayingAudioRecord,
-  resumePlayingAudioRecord,
-  stopPlayingAudioRecord,
-  releasePlayedAudioRecord
+  startPlayingAudioTrack,
+  pausePlayingAudioTrack,
+  resumePlayingAudioTrack,
+  stopPlayingAudioTrack,
+  releasePlayedAudioTrack
 }
 
 class Player extends Component {
   static propTypes = {
-    audioSources: PropTypes.array
+    uid: PropTypes.string,
+    sources: PropTypes.array,
+    duration: PropTypes.number
   }
 
   handleStartButtonClick = () => {
-    this.props.startPlayingAudioRecord(this.props.audioSources)
+    const { uid, sources, startPlayingAudioTrack } = this.props
+
+    startPlayingAudioTrack(uid, sources)
   }
 
   handlePauseButtonClick = () => {
-    this.props.pausePlayingAudioRecord()
+    this.props.pausePlayingAudioTrack(this.props.uid)
   }
 
   handleResumeButtonClick = () => {
-    this.props.resumePlayingAudioRecord()
+    this.props.resumePlayingAudioTrack(this.props.uid)
   }
 
   handleStopButtonClick = () => {
-    this.props.stopPlayingAudioRecord()
+    this.props.stopPlayingAudioTrack(this.props.uid)
   }
 
   renderStartButton() {
@@ -77,10 +88,10 @@ class Player extends Component {
   }
 
   renderChangeButton = () => {
-    const { isAudioRecordPlaying, isAudioRecordPaused } = this.props
+    const { isPlaying, isPaused } = this.props
 
-    if (isAudioRecordPlaying) return this.renderPauseButton()
-    if (isAudioRecordPaused) return this.renderResumeButton()
+    if (isPlaying) return this.renderPauseButton()
+    if (isPaused) return this.renderResumeButton()
 
     return this.renderStartButton()
   }
@@ -93,22 +104,17 @@ class Player extends Component {
     )
   }
 
-  formatTime(seconds) {
-    // TODO Convert to time
-    return seconds.toString().replace('.', ':').slice(0, 4)
-  }
-
   render() {
-    const { audioRecordPosition, audioRecordDuration } = this.props
+    const { position, duration } = this.props
 
     return (
       <div className={styles.container}>
         <div className={styles.info}>
-          <div className={styles.position}>{this.formatTime(audioRecordPosition)}</div>
+          <div className={styles.position}>{secondsToPlayerFormat(position)}</div>
 
           <ProgressBar className={styles.progress} progress={25} />
 
-          <div className={styles.duration}>{this.formatTime(audioRecordDuration)}</div>
+          <div className={styles.duration}>{secondsToPlayerFormat(duration)}</div>
         </div>
 
         <div className={styles.actions}>

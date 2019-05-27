@@ -10,7 +10,8 @@ import commonStyles from '../commonStyles.module.scss'
 class AudioTask extends Component {
   static propTypes = {
     uid: PropTypes.string,
-    sources: PropTypes.array
+    sources: PropTypes.array,
+    duration: PropTypes.number
   }
 
   renderNoteHeader = () => {
@@ -18,7 +19,9 @@ class AudioTask extends Component {
   }
 
   renderNoteBody = () => {
-    return <Player audioSources={this.props.sources} />
+    const { uid, sources, duration } = this.props
+
+    return <Player uid={uid} sources={sources} duration={duration} />
   }
 
   render() {

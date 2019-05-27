@@ -12,14 +12,10 @@ export const NOTE_SUBTYPES = {
 
 export const DEFAULT_NOTE_TYPE = NOTE_TYPES.THOUGHT
 
-export const createTextNote = (type, data) => {
-  const { text } = data
-
+export const createTextNote = (type, { text }) => {
   return { uid: generateUniqueId(), type, subtype: NOTE_SUBTYPES.TEXT, text }
 }
 
-export const createAudioNote = (type, data) => {
-  const { sources } = data
-
-  return { uid: generateUniqueId(), type, subtype: NOTE_SUBTYPES.AUDIO, sources }
+export const createAudioNote = (type, { sources, duration }) => {
+  return { uid: generateUniqueId(), type, subtype: NOTE_SUBTYPES.AUDIO, sources, duration }
 }

@@ -1,62 +1,82 @@
 import * as types from './actionTypes'
-import AudioRecord from 'lib/audio/record'
+import AudioTrack from 'lib/audio/track'
 
 import { areTwoArraysEqual } from 'lib/utils/array'
 
-const createOrReuseAudioRecord = (sources, audioRecord) => {
-  if (areTwoArraysEqual(sources, audioRecord.getSources())) return audioRecord
+const createOrReuseAudioTrack = async (uid, sources) => {
+  const audioTrack = getAudioTrackByUid(uid)
 
-  const onStartPlayingNextFragment = index => window.store.dispatch(startPlayingNextAudioRecordFragment(index))
-  const onFinishPlaying = () => window.store.dispatch(finishPlayingAudioRecord())
-  const newAudioRecord = new AudioRecord(sources, { onStartPlayingNextFragment, onFinishPlaying })
+  if (audioTrack && areTwoArraysEqual(sources, audioTrack.getSources())) return audioTrack
 
-  return newAudioRecord
+  return new Promise(resolve => {
+    const onStartPlayingNextFragment = index => window.store.dispatch(startPlayingNextAudioTrackFragment(uid, index))
+    const onFinishPlaying = () => window.store.dispatch(finishPlayingAudioTrack(uid))
+
+    const newAudioTrack = new AudioTrack.create(sources, { onStartPlayingNextFragment, onFinishPlaying })
+
+    resolve(newAudioTrack)
+  })
 }
 
-const startPlayingNextAudioRecordFragment = fragmentIndex => {
-  return { type: types.START_PLAYING_NEXT_AUDIO_RECORD_FRAGMENT, fragmentIndex }
+const getAudioTrackByUid = uid => {
+  const entry = window.store.getState().audioPlaying.entries[uid]
+  const audioTrack = entry && entry.audioTrack
+
+  return audioTrack
 }
 
-const finishPlayingAudioRecord = () => ({ type: types.FINISH_PLAYING_AUDIO_RECORD })
+const getPreviousActiveAudioTrack = () => {
+  const { activeEntryUid } = window.store.getState().audioPlaying
 
-export const startPlayingAudioRecord = sources => {
-  const { audioRecord } = window.store.getState().audioPlaying
-
-  const maybeNewAudioRecord = createOrReuseAudioRecord(sources, audioRecord)
-
-  maybeNewAudioRecord.startPlaying()
-
-  return { type: types.START_PLAYING_AUDIO_RECORD, audioRecord: maybeNewAudioRecord }
+  return getAudioTrackByUid(activeEntryUid)
 }
 
-export const pausePlayingAudioRecord = () => {
-  const { audioRecord } = window.store.getState().audioPlaying
+export const startPlayingAudioTrack = async (uid, sources) => {
+  const previousActiveAudioTrack = getPreviousActiveAudioTrack()
+  if (previousActiveAudioTrack) previousActiveAudioTrack.pausePlaying()
 
-  audioRecord.pausePlaying()
+  const audioTrack = await createOrReuseAudioTrack(uid, sources)
+  audioTrack.startPlaying()
 
-  return { type: types.PAUSE_PLAYING_AUDIO_RECORD }
+  return { type: types.START_PLAYING_AUDIO_TRACK, audioTrack, uid }
 }
 
-export const resumePlayingAudioRecord = () => {
-  const { audioRecord } = window.store.getState().audioPlaying
-
-  audioRecord.resumePlaying()
-
-  return { type: types.RESUME_PLAYING_AUDIO_RECORD }
+const startPlayingNextAudioTrackFragment = (uid, fragmentIndex) => {
+  return { type: types.START_PLAYING_NEXT_AUDIO_TRACK_FRAGMENT, uid, fragmentIndex }
 }
 
-export const stopPlayingAudioRecord = () => {
-  const { audioRecord } = window.store.getState().audioPlaying
+export const pausePlayingAudioTrack = uid => {
+  const audioTrack = getAudioTrackByUid(uid)
 
-  audioRecord.stopPlaying()
+  audioTrack.pausePlaying()
 
-  return { type: types.STOP_PLAYING_AUDIO_RECORD }
+  return { type: types.PAUSE_PLAYING_AUDIO_TRACK, uid }
 }
 
-export const releasePlayedAudioRecord = () => {
-  const { audioRecord } = window.store.getState().audioPlaying
+export const resumePlayingAudioTrack = uid => {
+  const previousActiveAudioTrack = getPreviousActiveAudioTrack()
+  if (previousActiveAudioTrack) previousActiveAudioTrack.pausePlaying()
 
-  audioRecord.release()
+  const audioTrack = getAudioTrackByUid(uid)
+  audioTrack.resumePlaying()
 
-  return { type: types.RELEASE_PLAYED_AUDIO_RECORD }
+  return { type: types.RESUME_PLAYING_AUDIO_TRACK, uid }
+}
+
+export const stopPlayingAudioTrack = uid => {
+  const audioTrack = getAudioTrackByUid(uid)
+
+  audioTrack.stopPlaying()
+
+  return { type: types.STOP_PLAYING_AUDIO_TRACK, uid }
+}
+
+const finishPlayingAudioTrack = uid => ({ type: types.FINISH_PLAYING_AUDIO_TRACK, uid })
+
+export const releasePlayedAudioTrack = uid => {
+  const audioTrack = getAudioTrackByUid(uid)
+
+  audioTrack.release()
+
+  return { type: types.RELEASE_PLAYED_AUDIO_TRACK, uid }
 }

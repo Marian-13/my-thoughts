@@ -6,17 +6,17 @@ const defaultMediaError = error => { console.log('defaultMediaError'); console.l
 const defaultMediaStatus = status => { console.log('defaultMediaStatus'); console.log(status) }
 
 const generateFileName = () => `my-thoughts-${generateUniqueId()}`
-const generateSrc = () => `${generateFileName()}.${getAudioFileExtention()}`
+const generateSrc = () => `${generateFileName()}.${getFileExtention()}`
 
-export const getAudioFileExtention = () => isAndroid() ? 'mp3' : 'wav'
+export const getFileExtention = () => isAndroid() ? 'mp3' : 'wav'
 
-export const createAudioFile = () => {
+export const createMedia = () => {
   const src = generateSrc()
 
   return new window.Media(src, defaultMediaSuccess, defaultMediaError, defaultMediaStatus)
 }
 
-export const getAudioFile = (src, { mediaSuccess, mediaError, mediaStatus } = {}) => {
+export const getMedia = (src, { mediaSuccess, mediaError, mediaStatus } = {}) => {
   return new window.Media(
     src,
     mediaSuccess || defaultMediaSuccess,
@@ -25,27 +25,55 @@ export const getAudioFile = (src, { mediaSuccess, mediaError, mediaStatus } = {}
   )
 }
 
-export const startRecordingToAudioFile = audioFile => audioFile.startRecord()
-export const stopRecordingToAudioFile = audioFile => audioFile.stopRecord()
+export const startRecordingMedia = media => media.startRecord()
+export const stopRecordingMedia = media => media.stopRecord()
 
-export const startPlayingAudioFile = audioFile => audioFile.play()
-export const pausePlayingAudioFile = audioFile => audioFile.pause()
-export const resumePlayingAudioFile = audioFile => audioFile.play()
-export const stopPlayingAudioFile = audioFile => audioFile.stop()
+export const startPlayingMedia = media => media.play()
+export const pausePlayingMedia = media => media.pause()
+export const resumePlayingMedia = media => media.play()
+export const stopPlayingMedia = media => media.stop()
 
-export const getDurationOfAudioFile = audioFile => audioFile.getDuration()
+export const getSourceOfMedia = media => media.src
 
-export const getPositionOfAudioFile = audioFile => {
-  let result = null
+export const getDurationOfMedia = async media => {
+  // https://stackoverflow.com/questions/13367593/phonegap-unable-to-getduration-out-of-media-api-but-other-methods-work/25801286#25801286
+  media.play()
+  media.stop()
 
-  const mediaSuccess = position => (result = position && position > -1 ? position : 0)
+  // https://github.com/ionic-team/ng-cordova/issues/1040#issuecomment-340020846
+  // https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-media/#mediagetduration
+  return new Promise((resolve, reject) => {
+    let counter = 0
 
-  audioFile.getCurrentPosition(mediaSuccess, defaultMediaError)
+    const timer = setInterval(() => {
+      if (counter >= 2000) {
+        clearInterval(timer)
 
-  return result
+        reject()
+      }
+
+      let duration = media.getDuration()
+
+      if (duration > 0) {
+        clearInterval(timer)
+
+        resolve(duration)
+      }
+    }, 100)
+  })
 }
 
-export const releaseAudioFile = audioFile => audioFile.release()
+export const getPositionOfMedia = media => {
+  let position = null
 
-// media.pauseRecord() and meadia resumeRecord() are not working at least at Android, but it does not make difference
+  const mediaSuccess = mediaPosition => (position = mediaPosition && mediaPosition > -1 ? mediaPosition : 0)
+
+  media.getCurrentPosition(mediaSuccess, defaultMediaError)
+
+  return position
+}
+
+export const releaseMedia = audioFile => audioFile.release()
+
+// media.pauseRecord() and media.resumeRecord() are not working, at least in Android, but it does not make difference
 // use startRecord() and stopRecord() of new media instance instead

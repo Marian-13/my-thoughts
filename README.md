@@ -71,3 +71,6 @@ To lock screen orientation
 <preference name="orientation" value="portrait" />
 in config xml
 https://cordova.apache.org/docs/en/3.1.0/config_ref/index.html#global-preferences
+
+
+Abstract logic for recording in the same way as for playing
